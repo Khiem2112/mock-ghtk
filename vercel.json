@@ -2,8 +2,27 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
       "destination": "/api"
+    },
+    {
+      "source": "/services/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/admin",
+      "destination": "/api"
+    },
+    {
+      "source": "/open/(.*)",
+      "destination": "/api"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/admin",
+      "permanent": false
     }
   ]
 }
