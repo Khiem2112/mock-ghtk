@@ -516,6 +516,6 @@ export function seedDatabase(force = false): void {
 }
 
 // Chay truc tiep file script
-if (process.argv[1] && process.argv[1].endsWith('seed.ts')) {
+if (typeof process !== 'undefined' && Array.isArray(process.argv) && process.argv[1]?.endsWith('seed.ts')) {
   seedDatabase(true)
 }
