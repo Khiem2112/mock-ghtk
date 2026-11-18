@@ -1,14 +1,25 @@
 import { Hono } from 'hono'
-import crypto from 'node:crypto'
 import { db, getSetting } from '../db'
 import { getStatusText } from '../constants'
 import { sendGhtkWebhook } from '../services/webhook'
 
 export const ghtkApiRouter = new Hono()
 
-// Tao ma log_id ngau nhien giong he thong GHTK
+// Tao chuoi hex ngau nhien tuong thich 100% ca moi truong Web Standard va Node
+function generateRandomHex(byteCount: number): string {
+  const bytes = new Uint8Array(byteCount)
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    crypto.getRandomValues(bytes)
+  } else {
+    for (let i = 0; i < byteCount; i++) {
+      bytes[i] = Math.floor(Math.random() * 256)
+    }
+  }
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('')
+}
+
 function generateLogId(): string {
-  return crypto.randomBytes(12).toString('hex')
+  return generateRandomHex(12)
 }
 
 // Xac thuc Token va phan quyen
@@ -547,7 +558,7 @@ ghtkApiRouter.get('/services/kho-hang/thong-tin-san-pham', (c) => {
 ghtkApiRouter.post('/services/shops/add', async (c) => {
   const body = await c.req.json().catch(() => ({}))
   const randomCode = 'S' + Math.floor(10000 + Math.random() * 90000)
-  const randomToken = crypto.randomBytes(20).toString('hex').toUpperCase()
+  const randomToken = generateRandomHex(20).toUpperCase()
 
   return c.json({
     success: true,
