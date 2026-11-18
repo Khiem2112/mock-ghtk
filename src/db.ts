@@ -1,7 +1,3 @@
-import path from 'node:path'
-import fs from 'node:fs'
-import { createRequire } from 'node:module'
-
 export interface IPreparedStatement {
   run(...params: any[]): { changes: number; lastInsertRowid?: number }
   get(...params: any[]): any
@@ -13,7 +9,7 @@ export interface IDatabase {
   prepare(sql: string): IPreparedStatement
 }
 
-// Bo nho du lieu trong RAM tuong thich SQLite dung cho Serverless va moi truong khong co node:sqlite
+// Bo nho du lieu trong RAM tuong thich SQLite dung cho ca Serverless va moi truong local
 export class MemoryDatabase implements IDatabase {
   private settings = new Map<string, string>()
   private orders = new Map<string, Record<string, any>>()
@@ -306,32 +302,8 @@ export class MemoryDatabase implements IDatabase {
   }
 }
 
-// Khoi tao ket noi database linh hoat tuy theo moi truong thuc thi
-function createDatabase(): IDatabase {
-  const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME)
-  if (isServerless) {
-    return new MemoryDatabase()
-  }
-
-  try {
-    const req = createRequire(import.meta.url)
-    const sqlite = req('node:sqlite')
-    if (sqlite && sqlite.DatabaseSync) {
-      const dataDir = path.resolve(process.cwd(), 'data')
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true })
-      }
-      const dbPath = path.resolve(dataDir, 'ghtk.db')
-      return new sqlite.DatabaseSync(dbPath)
-    }
-  } catch {
-    // Tu dong fallback ve MemoryDatabase neu runtime khong co module sqlite
-  }
-
-  return new MemoryDatabase()
-}
-
-export const db: IDatabase = createDatabase()
+// Su dung MemoryDatabase thuan tuy khong phu thuoc bat ky thu vien he thong hay C++ binding nao
+export const db: IDatabase = new MemoryDatabase()
 
 // Khoi tao cau truc bang va du lieu mac dinh
 export function initDatabase(): void {
