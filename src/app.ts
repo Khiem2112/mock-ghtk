@@ -34,6 +34,10 @@ app.get('/admin', (c) => {
   return c.html(renderDashboardHtml())
 })
 
+app.get('/api', (c) => {
+  return c.html(renderDashboardHtml())
+})
+
 // Gan cac router API mock GHTK va router quan ly UI
 app.route('/', ghtkApiRouter)
 app.route('/', uiApiRouter)

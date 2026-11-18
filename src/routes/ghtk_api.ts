@@ -470,9 +470,8 @@ ghtkApiRouter.get('/services/label/:tracking_order', (c) => {
   }
 
   // Tra ve binary PDF theo chuan
-  const pdfHeader = Buffer.from(
-    `%PDF-1.4\n1 0 obj\n<< /Title (${order.label_id}) /Producer (GHTK Mock Server) >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n`,
-    'utf-8'
+  const pdfHeader = new TextEncoder().encode(
+    `%PDF-1.4\n1 0 obj\n<< /Title (${order.label_id}) /Producer (GHTK Mock Server) >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n`
   )
 
   c.header('Content-Type', 'application/pdf')
