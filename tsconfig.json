@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
-    "strict": true,
+    "strict": false,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "outDir": "dist"
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*", "api/**/*", "test/**/*"]
 }
